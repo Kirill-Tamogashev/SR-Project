@@ -4,9 +4,10 @@
 [submodule "submodules/gan_pix2pix"]
 	path = submodules/gan_pix2pix
 	url = https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix.git
-[submodule "submodules/not"]
-	path = submodules/not
-	url = https://github.com/iamalexkorotin/NeuralOptimalTransport.git
 [submodule "submodules/ddpm_sr3"]
 	path = submodules/ddpm_sr3
 	url = https://github.com/Janspiry/Image-Super-Resolution-via-Iterative-Refinement.git
+
+[submodule "submodules/torch_not"]
+	path = submodules/torch_not
+	url = https://github.com/iamalexkorotin/NeuralOptimalTransport.git
