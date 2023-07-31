@@ -7,7 +7,6 @@
 [submodule "submodules/ddpm_sr3"]
 	path = submodules/ddpm_sr3
 	url = https://github.com/Janspiry/Image-Super-Resolution-via-Iterative-Refinement.git
-
 [submodule "submodules/torch_not"]
 	path = submodules/torch_not
 	url = https://github.com/iamalexkorotin/NeuralOptimalTransport.git
