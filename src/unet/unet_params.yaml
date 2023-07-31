@@ -1,0 +1,27 @@
+project: U-Net-SR
+unet_model:
+    name: unet-sr
+    channelwise: true
+finetune_model:
+    name: finetune-sr
+    finetune: false
+    channelwise: true
+training:
+    device: cpu
+    batch_size: 64
+    learning_rate: 0.001
+    weight_decay: 0.0000001
+    n_epochs: 15
+    criterion: l1
+    loss_args:
+        reduction: sum
+data:
+    train:
+        hr: train_T2_V10_U10_d02_2017-2019_hr_npy
+        lr: train_T2_V10_U10_d02_2017-2019_lr_npy
+    val:
+        lr: val_T2_V10_U10_d02_2019_2020_lr_npy
+        hr: val_T2_V10_U10_d02_2019_2020_hr_npy
+    test:
+        lr: test_T2_V10_U10_d02_2021_lr_npy
+        hr: test_T2_V10_U10_d02_2021_hr_npy
