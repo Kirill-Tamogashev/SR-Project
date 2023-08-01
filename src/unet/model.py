@@ -45,10 +45,10 @@ class RegressionSR(nn.Module):
     def __init__(
             self,
             params,
-            models: tp.List,
-            model_chkpt_dir: Path,
-            loss_fn: tp.Callable,
-            use_scheduler: bool = True
+            models:             tp.List,
+            model_chkpt_dir:    Path,
+            loss_fn:            tp.Optional[tp.Callable],
+            use_scheduler:      bool = True
     ):
         super().__init__()
 

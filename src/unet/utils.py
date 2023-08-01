@@ -22,7 +22,7 @@ def normalize(image) -> tp.Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
 
 def denormalize(image, min_values, max_values):
     image = image * (max_values - min_values) + min_values
-    return torch.clip(image, min=0, max=255)
+    return torch.clip(image, min=0, max=255).byte()
 
 
 def cls_name(cls):
