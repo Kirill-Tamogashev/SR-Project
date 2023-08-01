@@ -66,8 +66,20 @@ class RegressionSR(nn.Module):
 
         self.schedulers = [
             torch.optim.lr_scheduler.ReduceLROnPlateau(opt, 'min', patience=5)
-            for opt in self.optimizer
-        ] if use_scheduler else [None for _ in self.optimizer]
+            for opt in self.optimizers
+        ] if use_scheduler else [None for _ in self.optimizers]
+        
+    def to(self, device):
+        for model in self.models:
+            model.to(device)
+            
+    def train(self):
+        for model in self.models:
+            model.train()
+    
+    def eval(self):
+        for model in self.models:
+            model.eval()
 
     def infer(self, x):
         preds = self(x)
@@ -75,18 +87,22 @@ class RegressionSR(nn.Module):
 
     def forward(self, x):
         return [model(x) for model in self.models]
+    
+    def compute_losses(self, preds, targets):
+        targets = targets.split([1, 2], dim=1) if len(preds) == 2 else (targets, )
+        return [self.loss_fn(x, trg) for x, trg in zip(preds, targets)]
 
     @torch.no_grad()
     def val_step(self, inputs, targets):
         preds = self(inputs)
-        losses = self.compute_loss(preds, targets)
+        losses = self.compute_losses(preds, targets)
 
-        out = torch.cat(preds, dim=1) if isinstance(preds, tuple) else preds
+        out = torch.cat(preds, dim=1) if isinstance(preds, tuple) else preds[0]
         return out, losses
 
     def train_step(self, inputs, targets):
         preds = self(inputs)
-        losses = self.compute_loss(preds, targets)
+        losses = self.compute_losses(preds, targets)
 
         for opt, scheduler, loss in zip(self.optimizers, self.schedulers, losses):
             opt.zero_grad(set_to_none=True)
@@ -95,7 +111,7 @@ class RegressionSR(nn.Module):
             if scheduler is not None:
                 scheduler.step(loss)
 
-        out = torch.cat(preds, dim=1) if isinstance(preds, tuple) else preds
+        out = torch.cat(preds, dim=1) if isinstance(preds, tuple) else preds[0]
         return out, losses
 
     def save_checkpoint(

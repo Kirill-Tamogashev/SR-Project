@@ -1,14 +1,14 @@
 project: U-Net-SR
 unet_model:
     name: unet-sr
-    channelwise: true
+    channelwise: false
 finetune_model:
     name: finetune-sr
     finetune: false
     channelwise: true
 training:
     device: cpu
-    batch_size: 64
+    batch_size: 16
     learning_rate: 0.001
     weight_decay: 0.0000001
     n_epochs: 15

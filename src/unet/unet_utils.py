@@ -25,12 +25,11 @@ def denormalize(image, min_values, max_values):
     return torch.clip(image, min=0, max=255)
 
 
-def make_image(image_list):
-    def _plot_picture(picture, ax, title, col):
-        ax.imshow(image)
-        ax.set_title(f"{title} | image {col}", fontsize=45)
-        ax.axis("off")
+def cls_name(cls):
+    return cls.__class__.__name__
 
+
+def make_image(image_list):
     titles = ("SR Image", "HR Image", "Bicubic")
     fig, ax = plt.subplots(3, 10, figsize=(90, 30))
 
@@ -39,15 +38,15 @@ def make_image(image_list):
         for col, image in enumerate(image_batch):
             image = torch.clip(image.to(torch.uint8), min=0, max=255)
             image = image.permute(1, 2, 0).cpu().numpy()
-            _plot_picture(image, ax[row, col], title, col)
-
+            ax[row, col].imshow(image)
+            ax[row, col].set_title(f"{title} | image {col}", fontsize=45)
+            ax[row, col].axis("off")
     return fig
 
 
-def load_params(params_file: Path, name: str) -> ConfigDict:
+def load_params(params_file: Path) -> ConfigDict:
     with params_file.open() as file:
         params: dict = yaml.safe_load(file)
-    params["experiment_name"] = name
     return ConfigDict(params)
 
 
