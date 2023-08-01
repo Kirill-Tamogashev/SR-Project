@@ -51,10 +51,10 @@ def load_params(params_file: Path) -> ConfigDict:
 
 
 def configure_dataloader(
-        low_res_path: str,
-        high_res_path: str,
-        batch_size: int,
-        shuffle: bool = False
+        low_res_path:   str,
+        high_res_path:  str,
+        batch_size:     int,
+        shuffle:        bool = False
 ):
     dataset = Dataset(
         lr_path=low_res_path,
@@ -69,10 +69,10 @@ def configure_dataloader(
 
 def log_data(
         run,
-        sr_img,
-        hr_img,
-        sr_unet,
-        losses,
+        sr_img:         torch.Tensor,
+        hr_img:         torch.Tensor,
+        sr_unet:        torch.Tensor,
+        losses:         tp.List[torch.Tensor],
         global_step:    int,
         epoch:          int,
         stage:          str = "train",

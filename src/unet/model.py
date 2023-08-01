@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
+
 class FinetuneModel(nn.Module):
     def __init__(
             self,
@@ -64,7 +65,7 @@ class RegressionSR(nn.Module):
         ]
 
         self.schedulers = [
-            ReduceLROnPlateau(opt, 'min', patience=5) if use_scheduler else None
+            ReduceLROnPlateau(opt, "min", patience=5) if use_scheduler else None
             for opt in self.optimizers
         ]
         
@@ -72,9 +73,9 @@ class RegressionSR(nn.Module):
         for model in self.models:
             model.to(device)
             
-    def train(self):
+    def train(self, mode: bool = True):
         for model in self.models:
-            model.train()
+            model.train(mode)
     
     def eval(self):
         for model in self.models:
@@ -125,13 +126,13 @@ class RegressionSR(nn.Module):
         }
 
         if (epoch and epoch % 5 == 0) or epoch == epochs:
-            path = self.model_ckpt_dir / f'{prefix}-milestone-{epoch}.pth'
+            path = self.model_ckpt_dir / f"{prefix}-milestone-{epoch}.pth"
         else:
-            path = self.model_ckpt_dir / f'{prefix}-checkpoint-epoch-{epoch}.pth'
+            path = self.model_ckpt_dir / f"{prefix}-checkpoint-epoch-{epoch}.pth"
         torch.save(ckpt_stat_dict, path.as_posix())
 
         if epoch - 3 > 0 and (epoch - 3) % 5 != 0:
-            path_to_remove = self.model_ckpt_dir / f'{prefix}-checkpoint-epoch-{epoch - 3}.pth'
+            path_to_remove = self.model_ckpt_dir / f"{prefix}-checkpoint-epoch-{epoch - 3}.pth"
             os.remove(path_to_remove.as_posix())
 
     def load_checkpoint(self, device):

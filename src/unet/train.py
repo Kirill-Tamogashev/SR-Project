@@ -8,8 +8,8 @@ from tqdm import tqdm
 
 from submodules.torch_unet.unet import UNet
 
-from src.unet.unet_model import RegressionSR, FinetuneModel
-from src.unet.unet_utils import (
+from src.unet.model import RegressionSR, FinetuneModel
+from src.unet.utils import (
     normalize,
     denormalize,
     load_params,
@@ -41,7 +41,7 @@ def train(params, run) -> None:
         batch_size=10,
         shuffle=True
     )
-    logging.info("Dataloaders configures.")
+    logging.info("Dataloaders configured.")
     val_batch = next(iter(val_loader))
 
     loss_fn = configure_loss(
@@ -49,7 +49,7 @@ def train(params, run) -> None:
         params.training.loss_args,
         device
     )
-    logging.info(f"Loss configures. Using {cls_name(loss_fn)}")
+    logging.info(f"Loss configured. Using {cls_name(loss_fn)}")
     
     unet_ckpt_dir = BaseCheckpoint.UNET / params.unet_model.name
     unet_ckpt_dir.mkdir(parents=True, exist_ok=True)
@@ -79,7 +79,7 @@ def train(params, run) -> None:
         finetune_ckpt_dir = BaseCheckpoint.UNET_FINETUNE / params.finetune_model.name
         finetune_ckpt_dir.mkdir(parents=True, exist_ok=True)
 
-        finetune_nets = [FinetuneModel(3, 1, 64, True, ), FinetuneModel(3, 2, 64, True)] \
+        finetune_nets = [FinetuneModel(3, 1, 64, True), FinetuneModel(3, 2, 64, True)] \
             if params.finetune_model.channelwise else [FinetuneModel(3, 3, 64, True)]
         finetune_model = RegressionSR(
             params=params,
@@ -89,13 +89,14 @@ def train(params, run) -> None:
         )
         finetune_model.to(device)
         finetune_model.train()
-        logging.info("Finetine model configured")
+        logging.info("Finetune model configured")
         logging.info(f"Finetune channelwise: {params.finetune_model.channelwise}")
     else:
-         logging.info("No finetune model")
+        logging.info("No finetune model")
 
     global_step = 0
     epochs = params.training.n_epochs
+    logging.info("Begin training.")
     for epoch in range(1, epochs + 1):
         with tqdm(total=len(train_loader), desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
             for batch in train_loader:
@@ -153,12 +154,12 @@ def train(params, run) -> None:
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='UNet for SR task')
-    parser.add_argument('--unet-name', '-n', type=str, default="unet-sr", help='Name of the run')
-    parser.add_argument('--finetune-name', '-f', type=str, default="finetune-sr", help='Name of the run')
-    parser.add_argument('--project', type=str, default="U-Net-SR", help='Name of the run')
-    parser.add_argument('--gpu', '-g', type=str, default=None, help='device number')
+    parser.add_argument('--unet-name', '-n', type=str, default="unet-sr", help="Name of the UNet model")
+    parser.add_argument('--finetune-name', '-f', type=str, default="finetune-sr", help="Name of the Finetune model")
+    parser.add_argument('--project', type=str, default="U-Net-SR", help="Name of the project")
+    parser.add_argument('--gpu', '-g', type=str, default=None, help="device number")
     parser.add_argument('--params', '-p', type=Path, default="./src/unet/unet_params.yaml")
-    parser.add_argument('--finetune', action="store_true", help="")
+    parser.add_argument('--finetune', action="store_true", help="Use finetune")
     parser.add_argument('--wandb', action="store_true", help="Use wandb")
     return parser.parse_args()
 
