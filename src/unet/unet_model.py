@@ -4,7 +4,7 @@ import os
 
 import torch
 import torch.nn as nn
-
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 class FinetuneModel(nn.Module):
     def __init__(
@@ -36,7 +36,6 @@ class FinetuneModel(nn.Module):
                 residual = x[:, 1:, :, :]
             else:
                 residual = x[:, :1, :, :]
-
             h = h + residual
         return h
 
@@ -52,7 +51,7 @@ class RegressionSR(nn.Module):
     ):
         super().__init__()
 
-        self.model_chkpt_dir = model_chkpt_dir
+        self.model_ckpt_dir = model_chkpt_dir
         self.loss_fn = loss_fn
 
         self.models = models
@@ -65,9 +64,9 @@ class RegressionSR(nn.Module):
         ]
 
         self.schedulers = [
-            torch.optim.lr_scheduler.ReduceLROnPlateau(opt, 'min', patience=5)
+            ReduceLROnPlateau(opt, 'min', patience=5) if use_scheduler else None
             for opt in self.optimizers
-        ] if use_scheduler else [None for _ in self.optimizers]
+        ]
         
     def to(self, device):
         for model in self.models:
@@ -83,7 +82,7 @@ class RegressionSR(nn.Module):
 
     def infer(self, x):
         preds = self(x)
-        return torch.cat(preds, dim=1) if isinstance(preds, tuple) else preds
+        return torch.cat(preds, dim=1) if isinstance(preds, tuple) else preds[0]
 
     def forward(self, x):
         return [model(x) for model in self.models]
