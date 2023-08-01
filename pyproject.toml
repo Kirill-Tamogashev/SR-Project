@@ -6,16 +6,13 @@ build-backend = "setuptools.build_meta"
 packages = ["src", "submodules"]
 
 [project]
-name = "my_package"
-authors = [
-    {name = "Josiah Carberry", email = "josiah_carberry@brown.edu"},
-]
-description = "My package description"
+name = "SR-Project"
+authors = [{name = "Kirill Tamogashev", email = "Kirill.Tamogashev@skoltech.ru"}]
+description = "Package for for testing various models on a Weather Super Resolution Dataset"
 readme = "README.rst"
 requires-python = ">=3.7"
-classifiers = [
-    "Programming Language :: Python :: 3",
-]
+classifiers = ["Programming Language :: Python :: 3"]
 dynamic = ["version"]
 
-
+[project.scripts]
+my-script = "src.unet.train:main"
