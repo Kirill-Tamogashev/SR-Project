@@ -12,6 +12,8 @@ from tqdm import tqdm
 
 from ml_collections import ConfigDict
 
+from src.constants import BaseCheckpoint
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -34,6 +36,8 @@ def configure_dataloader(dataset_opt, phase):
 def train(args):
     opt = ConfigDict(Logger.parse(args))
     opt.name = args.name
+
+    opt.path.checkpoint = BaseCheckpoint.SR3 / opt.name
 
     torch.backends.cudnn.enabled = True
     torch.backends.cudnn.benchmark = True
