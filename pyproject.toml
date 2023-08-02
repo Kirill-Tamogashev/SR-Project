@@ -15,20 +15,18 @@ classifiers = ["Programming Language :: Python :: 3"]
 dynamic = ["version"]
 
 [project.scripts]
-my-script = [
-    # UNet scripts
-    "src.unet.train:main",
-    "src.unet.eval:main",
+# UNet scripts
+unet_train="src.unet.train:main"
+unet_eval="src.unet.eval:main"
 
-    # NOT Scripts
-    "src.neural_ot.not_train:main",
-    "src.neural_ot.eval:main",
+# NOT Scripts
+not_train="src.neural_ot.not_train:main"
+not_eval="src.neural_ot.eval:main"
 
-    # Pix2Pix GAN scripts
-    "src.pix2pix.train:main",
-    "src.pix2pix.eval:main",
+# Pix2Pix GAN scripts
+pix2pix_train="src.pix2pix.train:main"
+pix2pix_eval="src.pix2pix.eval:main"
 
-    # SR3 Diffusion scripts
-    "src.sr_ddpm.train:main",
-    "src.sr_ddpm.eval:main",
-]
+# SR3 Diffusion scripts
+sr_ddpm_train="src.sr_ddpm.train:main"
+sr_ddpm_eval="src.sr_ddpm.eval:main"
