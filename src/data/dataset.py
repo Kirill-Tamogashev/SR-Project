@@ -12,14 +12,12 @@ class Dataset(torch.utils.data.Dataset):
             self,
             lr_path: str,
             hr_path: str,
-            low_res: int = 64,
-            high_res: int = 128,
+            normalize: bool = False
     ):
 
         self.lr_path = BASE_PATH / lr_path
         self.hr_path = BASE_PATH / hr_path
-        self.low_res = low_res
-        self._high_res = high_res
+        self.normalize = normalize
 
         self.lr_images = self.from_dataset(resolution="lr")
         self.hr_images = self.from_dataset(resolution="hr")
@@ -48,7 +46,12 @@ class Dataset(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         lr = self.load_image(idx, resolution="lr")
+        
         hr = self.load_image(idx, resolution="hr")
         sr = self.interpolate(lr)
+        
+        if self.normalize:
+            hr = hr.div(127.5).sub(1)
+            sr = sr.div(127.5).sub(1)
 
         return {"HR": hr.float(), "SR": sr.float(), "LR": lr.float(), "Index": idx}

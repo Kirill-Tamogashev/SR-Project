@@ -92,6 +92,7 @@ def train(params, run) -> None:
         logging.info("Finetune model configured")
         logging.info(f"Finetune channelwise: {params.finetune_model.channelwise}")
     else:
+        finetune_model = None
         logging.info("No finetune model")
 
     global_step = 0

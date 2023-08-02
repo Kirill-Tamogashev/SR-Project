@@ -18,7 +18,6 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 def load_ckpt(model: str, device):
     model_path = BaseCheckpoint.NOT / model
-    print(model_path)
     latest_ckpt_path = max(model_path.glob("*.pt"), key=lambda x: x.stat().st_ctime)
     return torch.load(latest_ckpt_path, map_location=device)
 

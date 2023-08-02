@@ -9,5 +9,5 @@ def tensor2image(
         device: Union[str, torch.device] = "cuda"
 ) -> torch.Tensor:
     min_, max_ = min_max
-    tensor = tensor.sub(min_).div(max_ - min_).mul(55).byte()
+    tensor = tensor.sub(min_).div(max_ - min_).mul(255).byte()
     return tensor.to(device)

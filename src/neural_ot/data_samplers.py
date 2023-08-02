@@ -44,7 +44,7 @@ def load_train_sampler(batch_size: int = 100, device="cuda"):
     hr_path = "train_T2_V10_U10_d02_2017-2019_hr_npy"
     return DataSampler(
         DataLoader(
-            Dataset(lr_path=lr_path, hr_path=hr_path),
+            Dataset(lr_path=lr_path, hr_path=hr_path, normalize=True),
             batch_size=batch_size,
             shuffle=True
         ),
@@ -57,7 +57,7 @@ def load_val_sampler(batch_size: int = 100, device="cuda"):
     hr_path = "val_T2_V10_U10_d02_2019_2020_hr_npy"
     return DataSampler(
         DataLoader(
-            Dataset(lr_path=lr_path, hr_path=hr_path),
+            Dataset(lr_path=lr_path, hr_path=hr_path, normalize=True),
             batch_size=batch_size,
             shuffle=True
         ),
@@ -69,7 +69,7 @@ def load_test_dataloader(batch_size: int = 100):
     lr_path = "test_T2_V10_U10_d02_2021_lr_npy"
     hr_path = "test_T2_V10_U10_d02_2021_hr_npy"
     return DataLoader(
-            Dataset(lr_path=lr_path, hr_path=hr_path),
+            Dataset(lr_path=lr_path, hr_path=hr_path, normalize=True),
             batch_size=batch_size,
             shuffle=True
     )

@@ -23,7 +23,7 @@ def main():
 
     data = Pix2PixDataset(
         lr_path="train_T2_V10_U10_d02_2017-2019_lr_npy",
-        hr_path="train_T2_V10_U10_d02_2017-2019_hr_npy"
+        hr_path="train_T2_V10_U10_d02_2017-2019_hr_npy",
     )
     dataset = DataLoader(
         data,

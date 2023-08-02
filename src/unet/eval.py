@@ -68,6 +68,7 @@ def eval_unet(params) -> None:
         finetune_model.eval()
         logging.info("Finetune model configured")
     else:
+        finetune_model = None
         logging.info("No finetune model")
 
     metrics = Metrics(device)

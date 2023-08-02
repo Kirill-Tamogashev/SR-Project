@@ -29,7 +29,8 @@ def main():
     opt = ConfigDict(Logger.parse(args))
     test_set = DataSet(
         lr_path="val_T2_V10_U10_d02_2019_2020_lr_npy",
-        hr_path="val_T2_V10_U10_d02_2019_2020_hr_npy"
+        hr_path="val_T2_V10_U10_d02_2019_2020_hr_npy",
+        normalize=True
     )
 
     test_loader = DataLoader(test_set, batch_size=64)

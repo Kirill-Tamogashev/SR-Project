@@ -10,4 +10,7 @@ class Pix2PixDataset(Dataset):
         hr = self.load_image(idx, resolution="hr")
         sr = self.interpolate(lr)
 
+        hr = hr.div(127.5).sub(1)
+        sr = sr.div(127.5).sub(1)
+            
         return {"B": hr.float(), "A": sr.float()}
