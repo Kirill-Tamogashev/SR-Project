@@ -30,7 +30,7 @@ class Dataset(torch.utils.data.Dataset):
 
     def from_dataset(self, resolution: str):
         path = self.hr_path if resolution == "hr" else self.lr_path
-        return sorted([image_path.as_posix() for image_path in path.glob("*.pth")])
+        return sorted([image_path.as_posix() for image_path in path.glob("*.npy")])
 
     @staticmethod
     def interpolate(x):

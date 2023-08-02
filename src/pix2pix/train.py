@@ -10,7 +10,7 @@ from src.pix2pix.pix2pix_data import Pix2PixDataset
 from src.constants import BaseCheckpoint
 
 
-if __name__ == '__main__':
+def main():
     opt = TrainOptions().parse()  # get training options
     opt.checkpoints_dir = BaseCheckpoint.PIX2PIX.as_posix()
     data = Pix2PixDataset(
@@ -80,3 +80,7 @@ if __name__ == '__main__':
         print('End of epoch %d / %d \t Time Taken: %d sec' % (
             epoch, opt.n_epochs + opt.n_epochs_decay, time.time() - epoch_start_time)
         )
+
+
+if __name__ == '__main__':
+    main()

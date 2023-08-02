@@ -164,7 +164,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-if __name__ == '__main__':
+def main():
     train_args = parse_arguments()
     params = load_params(train_args.params)
 
@@ -184,3 +184,7 @@ if __name__ == '__main__':
             train(params, run)
     else:
         train(params, None)
+
+
+if __name__ == '__main__':
+    main()

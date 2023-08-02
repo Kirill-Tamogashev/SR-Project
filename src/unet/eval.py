@@ -4,6 +4,7 @@ from pathlib import Path
 import torch
 
 from tqdm import tqdm
+import os
 
 from submodules.torch_unet.unet import UNet
 
@@ -27,8 +28,8 @@ def eval_unet(params) -> None:
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
     test_loader = configure_dataloader(
-        low_res_path=params.test.train.lr,
-        high_res_path=params.test.train.hr,
+        low_res_path=params.data.test.lr,
+        high_res_path=params.data.test.hr,
         batch_size=params.training.batch_size,
         shuffle=True
     )
@@ -75,7 +76,7 @@ def eval_unet(params) -> None:
     for batch in tqdm(test_loader):
 
         sr_input = batch["SR"].to(device=device)
-        hr_true = batch["HR"].to(device=device)
+        hr_true = batch["HR"].to(device=device).byte()
 
         sr_normed, sr_min_values, sr_max_values = normalize(sr_input)
 
@@ -88,20 +89,26 @@ def eval_unet(params) -> None:
         hr_pred = denormalize(sr_pred, sr_min_values, sr_max_values)
         metrics.update(real=hr_true, fake=hr_pred)
 
+    logging.info("Evaluation finished, printing metrics")
     metrics.print()
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='UNet for SR task')
-    parser.add_argument('--unet-name', '-n', type=str, default="unet-sr", help="Name of the UNet model")
-    parser.add_argument('--finetune-name', '-f', type=str, default="finetune-sr", help="Name of the Finetune model")
+    parser.add_argument('--unet-name', '-n', type=str, default="unet-sr", 
+                        help="Name of the UNet model", choices=os.listdir(BaseCheckpoint.UNET))
+    parser.add_argument('--finetune-name', '-f', type=str, default="finetune-sr", 
+                        help="Name of the Finetune model", 
+                        choices=os.listdir(BaseCheckpoint.UNET_FINETUNE))
     parser.add_argument('--gpu', '-g', type=str, default=None, help="device number")
-    parser.add_argument('--params', '-p', type=Path, default="./src/unet/unet_params.yaml")
+    parser.add_argument('--params', '-p', type=Path, default="./src/unet/params.yaml")
     parser.add_argument('--finetune', action="store_true", help="Use finetune")
+    parser.add_argument('--batch_size', "-b", type=int, default=32, 
+                        help="Batch size used for eval")
     return parser.parse_args()
 
 
-if __name__ == '__main__':
+def main():
     train_args = parse_arguments()
     params = load_params(train_args.params)
 
@@ -109,5 +116,10 @@ if __name__ == '__main__':
     params.finetune_model.name = train_args.finetune_name
     params.training.device = train_args.gpu
     params.finetune_model.finetune = train_args.finetune
+    params.training.batch_size = train_args.batch_size
 
     eval_unet(params)
+
+
+if __name__ == '__main__':
+    main()

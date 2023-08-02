@@ -1,5 +1,7 @@
 import torch
 
+from tqdm import tqdm
+
 from torchmetrics.image.fid import FrechetInceptionDistance as FID
 from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity as LPIPS
 from torchmetrics.image.inception import InceptionScore as IS
@@ -24,7 +26,6 @@ class Metrics:
             "PSNR": PSNR().to(device),
             "SSIM": SSIM().to(device),
         }
-
         if device != "cpu":
             self.to(device)
 
@@ -56,7 +57,7 @@ class Metrics:
 
     def print(self):
         tab = PrettyTable(["Metric name", "Metric value"])
-        for name, metric in self.metric_dict.items():
+        for name, metric in tqdm(self.metric_dict.items(), desc="Computing metrics", leave=False):
             if name == "IS":
                 value = metric.compute()[0]
             else:

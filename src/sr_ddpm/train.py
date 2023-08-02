@@ -107,6 +107,10 @@ def train(args):
                     diffusion.save_network(current_epoch, current_step)
 
 
-if __name__ == "__main__":
+def main():
     args = parse_arguments()
     train(args)
+
+
+if __name__ == '__main__':
+    main()

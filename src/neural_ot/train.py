@@ -50,7 +50,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-if __name__ == "__main__":
+def main():
     LARGE_ENOUGH_NUMBER = 100
     PngImagePlugin.MAX_TEXT_CHUNK = LARGE_ENOUGH_NUMBER * (1024 ** 2)
 
@@ -172,3 +172,7 @@ if __name__ == "__main__":
 
             gc.collect()
             torch.cuda.empty_cache()
+
+
+if __name__ == '__main__':
+    main()

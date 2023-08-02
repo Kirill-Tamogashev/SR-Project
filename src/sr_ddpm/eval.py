@@ -13,7 +13,7 @@ from src.miscellaneous.utils import tensor2image
 from src.data.dataset import Dataset as DataSet
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', type=str, default='sr3_experiments')
     parser.add_argument('--config', default='my_config/sr_weather.yaml')
@@ -58,3 +58,7 @@ if __name__ == "__main__":
             metrics.update(hr_img, sr_img)
 
     metrics.print()
+
+
+if __name__ == '__main__':
+    main()

@@ -11,7 +11,7 @@ from src.miscellaneous.utils import tensor2image
 from src.pix2pix.pix2pix_data import Pix2PixDataset
 
 
-if __name__ == '__main__':
+def main():
     opt = TestOptions().parse()  # get test options
     # hard-code some parameters for test
     opt.num_threads = 0  # test code only supports num_threads = 0
@@ -51,3 +51,7 @@ if __name__ == '__main__':
         fake = tensor2image(model.fake_B, (-1.0, 1.0), device)
         metrics.update(real=real, fake=fake)
     metrics.print()
+
+
+if __name__ == '__main__':
+    main()
