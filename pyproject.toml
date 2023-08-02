@@ -22,7 +22,7 @@ my-script = [
 
     # NOT Scripts
     "src.neural_ot.not_train:main",
-    "src.neural_ot.not_eval:main",
+    "src.neural_ot.eval:main",
 
     # Pix2Pix GAN scripts
     "src.pix2pix.train:main",

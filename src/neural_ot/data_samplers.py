@@ -65,14 +65,11 @@ def load_val_sampler(batch_size: int = 100, device="cuda"):
     )
 
 
-def load_test_sampler(batch_size: int = 100, device="cuda"):
+def load_test_dataloader(batch_size: int = 100):
     lr_path = "test_T2_V10_U10_d02_2021_lr_npy"
     hr_path = "test_T2_V10_U10_d02_2021_hr_npy"
-    return DataSampler(
-        DataLoader(
+    return DataLoader(
             Dataset(lr_path=lr_path, hr_path=hr_path),
             batch_size=batch_size,
             shuffle=True
-        ),
-        device=device
     )
