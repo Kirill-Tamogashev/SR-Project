@@ -18,8 +18,7 @@ from src.unet.utils import (
 from src.constants import BaseCheckpoint
 from src.miscellaneous.metrics import Metrics
 
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning)
+
 
 
 @torch.no_grad()

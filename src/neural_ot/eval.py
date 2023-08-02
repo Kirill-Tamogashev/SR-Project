@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from pathlib import Path
 
 import torch
 from tqdm import tqdm
@@ -8,18 +9,12 @@ from submodules.torch_not.src.unet import UNet
 
 from src.constants import BaseCheckpoint
 from src.miscellaneous.metrics import Metrics
-from src.miscellaneous.utils import tensor2image
+from src.miscellaneous.utils import tensor2image, load_ckpt
 from src.neural_ot.unet2 import U2NET
 from src.neural_ot.data_samplers import load_test_dataloader
 
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
-
-
-def load_ckpt(model: str, device):
-    model_path = BaseCheckpoint.NOT / model
-    latest_ckpt_path = max(model_path.glob("*.pt"), key=lambda x: x.stat().st_ctime)
-    return torch.load(latest_ckpt_path, map_location=device)
 
 
 def parse_args():
@@ -34,7 +29,8 @@ def parse_args():
 @torch.no_grad()
 def eval_not(args):
     device = torch.device(f"cuda:{args.device}")
-    ckpt = load_ckpt(args.model, device)
+    model_path = BaseCheckpoint.NOT / args.model
+    ckpt = load_ckpt(model_path, device)
 
     model_T = U2NET(3, 3) if args.net == "unet2" else UNet(3, 3, base_factor=48)
     model_T.load_state_dict(ckpt)

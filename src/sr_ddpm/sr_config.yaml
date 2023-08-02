@@ -2,11 +2,12 @@ project: "WeatherDiffSR3"
 name: "ddpm-sr-v1"
 phase: "train"
 gpu_ids: [2]
+distributed: false
 path:
     log: "logs"
     results: "results"
     checkpoint: "checkpoint"
-    resume_state": 0
+    resume_state: null
 datasets:
     train:
         name: "SR3-WEATHER-train"
