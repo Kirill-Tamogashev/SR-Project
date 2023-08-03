@@ -20,7 +20,7 @@ unet_train="src.unet.train:main"
 unet_eval="src.unet.eval:main"
 
 # NOT Scripts
-not_train="src.neural_ot.not_train:main"
+not_train="src.neural_ot.train:main"
 not_eval="src.neural_ot.eval:main"
 
 # Pix2Pix GAN scripts

@@ -1,3 +1,5 @@
+from typing import Optional
+
 import torch
 
 from tqdm import tqdm
@@ -54,16 +56,21 @@ class Metrics:
             else:
                 real_sliced, fake_sliced = self.get_channel_slice(name, real, fake)
                 self.metric_dict[name].update(fake_sliced, real_sliced)
+                
+    def compute(self, rounding: Optional[int] = None):
+        value_dict = {}
+        for name, metric in tqdm(self.metric_dict.items(), desc="Computing metrics", leave=False):
+            value = metric.compute()[0] if name == "IS" else metric.compute()
+            value_dict[name] = value.item() if rounding is None else round(value.item(), rounding)
+        return value_dict
 
     def print(self):
         tab = PrettyTable(["Metric name", "Metric value"])
-        for name, metric in tqdm(self.metric_dict.items(), desc="Computing metrics", leave=False):
-            if name == "IS":
-                value = metric.compute()[0]
-            else:
-                value = metric.compute()
-
-            value = value.item()
-            tab.add_row([name, round(value, 3)])
-
+        value_dict = self.compute(rounding=3)
+        for name, value, in value_dict.items():
+            tab.add_row([name, value])
         print(tab)
+        
+    def reset(self):
+        for name in self.metric_dict.keys():
+            self.metric_dict[name].reset()
