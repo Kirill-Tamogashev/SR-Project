@@ -15,7 +15,7 @@ from src.miscellaneous.utils import tensor2image, load_ckpt
 from src.data.dataset import Dataset as DataSet
 from src.sr_ddpm.utils import configure_params
 
-# this fixes local imports within the submodule
+# Fix local imports within the submodule
 import sys
 sys.path.append("submodules/ddpm_sr3")
 
@@ -25,26 +25,25 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--name", type=str, choices=os.listdir(BaseCheckpoint.SR3))
-    parser.add_argument("--config", default="./src/sr_ddpm/sr_config.yaml", type=Path)
-    parser.add_argument("--device", type=int, default=None)
+    parser.add_argument("--name",           type=str, choices=os.listdir(BaseCheckpoint.SR3))
+    parser.add_argument("--config",         default="./src/sr_ddpm/sr_config.yaml", type=Path)
+    parser.add_argument("--device",         type=int, default=None)
     
     # The folowing args shold not be changed, they are kept for compatability
-    parser.add_argument("--phase", default="eval")
-    parser.add_argument("--debug", action="store_true")
-    parser.add_argument("--enable_wandb", action="store_true")
+    parser.add_argument("--phase",          default="eval")
+    parser.add_argument("--debug",          action="store_true")
+    parser.add_argument("--enable_wandb",   action="store_true")
     parser.add_argument("--log_wandb_ckpt", action="store_true")
-    parser.add_argument("--log_eval", action="store_true")
+    parser.add_argument("--log_eval",       action="store_true")
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-    
     opt = configure_params(args)
     device = torch.device(f"cuda:{args.device}")
     
-    ckpt = load_ckpt(opt.path.experiments_root, device, pattern="*.pth")
+    model_state = load_ckpt(opt.path.experiments_root, device, pattern="*.pth")
 
     test_set = DataSet(
         lr_path="val_T2_V10_U10_d02_2019_2020_lr_npy",
@@ -56,7 +55,7 @@ def main():
     metrics = Metrics(device)
 
     diffusion = Model.create_model(opt)
-    diffusion.netG.load_state_dict(ckpt)
+    diffusion.netG.load_state_dict(model_state)
     diffusion.netG.cuda()
     diffusion.netG.eval()
 

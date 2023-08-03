@@ -28,5 +28,5 @@ pix2pix_train="src.pix2pix.train:main"
 pix2pix_eval="src.pix2pix.eval:main"
 
 # SR3 Diffusion scripts
-sr_ddpm_train="src.sr_ddpm.train:main"
-sr_ddpm_eval="src.sr_ddpm.eval:main"
+ddpm_sr3_train="src.sr_ddpm.train:main"
+ddpm_sr3_eval="src.sr_ddpm.eval:main"

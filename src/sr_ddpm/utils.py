@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from ml_collections import ConfigDict
-import os
+# import os
 import yaml
 
 from src.constants import BaseCheckpoint
@@ -12,6 +12,7 @@ def load_params(params_file: Path) -> ConfigDict:
         params: dict = yaml.safe_load(file)
     return ConfigDict(params)
 
+
 def configure_params(args):
     params = load_params(args.config)
     
@@ -20,6 +21,5 @@ def configure_params(args):
     params.gpu_ids = [args.device]
     
     params.path.experiments_root = BaseCheckpoint.SR3 / args.name
-    os.environ['CUDA_VISIBLE_DEVICES'] = str(args.device)
     
     return params
