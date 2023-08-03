@@ -13,4 +13,4 @@ class Pix2PixDataset(Dataset):
         hr = hr.div(127.5).sub(1)
         sr = sr.div(127.5).sub(1)
             
-        return {"B": hr.float(), "A": sr.float()}
+        return {"B": hr.float(), "A": sr.float(), "A_paths": "", "B_paths": ""}
