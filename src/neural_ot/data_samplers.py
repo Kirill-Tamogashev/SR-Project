@@ -9,17 +9,19 @@ class DataSampler(Sampler):
         super().__init__(device)
 
         self.loader = loader
+        self.max_size = self.loader.batch_size
         self.it = iter(self.loader)
 
     def sample(self, size=5):
-        assert size <= self.loader.batch_size
+        assert size <= self.max_size
 
         try:
             batch = next(self.it)
         except StopIteration:
             self.it = iter(self.loader)
             return self.sample(size)
-        if len(batch) < size:
+
+        if len(batch["HR"]) < size:
             return self.sample(size)
 
         return batch
@@ -42,28 +44,20 @@ class DataSampler(Sampler):
 def load_train_sampler(batch_size: int = 100, device="cuda"):
     lr_path = "train_T2_V10_U10_d02_2017-2019_lr_npy"
     hr_path = "train_T2_V10_U10_d02_2017-2019_hr_npy"
+    dataset =  Dataset(lr_path=lr_path, hr_path=hr_path, normalize=True)
     return DataSampler(
-        DataLoader(
-            Dataset(lr_path=lr_path, hr_path=hr_path, normalize=True),
-            batch_size=batch_size,
-            shuffle=True
-        ),
-        device=device
+        DataLoader(dataset, batch_size=batch_size, shuffle=True),
+        device=device,
     )
-
 
 def load_val_sampler(batch_size: int = 100, device="cuda"):
     lr_path = "val_T2_V10_U10_d02_2019_2020_lr_npy"
     hr_path = "val_T2_V10_U10_d02_2019_2020_hr_npy"
+    dataset =  Dataset(lr_path=lr_path, hr_path=hr_path, normalize=True)
     return DataSampler(
-        DataLoader(
-            Dataset(lr_path=lr_path, hr_path=hr_path, normalize=True),
-            batch_size=batch_size,
-            shuffle=True
-        ),
-        device=device
+        DataLoader(dataset, batch_size=batch_size, shuffle=True),
+        device=device,
     )
-
 
 def load_test_dataloader(batch_size: int = 100):
     lr_path = "test_T2_V10_U10_d02_2021_lr_npy"
