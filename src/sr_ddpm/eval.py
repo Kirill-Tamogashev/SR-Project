@@ -7,7 +7,7 @@ from tqdm import tqdm
 import torch
 from torch.utils.data import DataLoader
 
-import submodules.ddpm_sr3.model as Model
+from submodules.ddpm_sr3.model import create_model
 
 from src.constants import BaseCheckpoint
 from src.miscellaneous.metrics import Metrics
@@ -17,24 +17,24 @@ from src.sr_ddpm.utils import configure_params
 
 # Fix local imports within the submodule
 import sys
-sys.path.append("submodules/ddpm_sr3")
-
 import warnings
+
+sys.path.append("submodules/ddpm_sr3")
 warnings.filterwarnings("ignore", category=UserWarning)
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--name",           type=str, choices=os.listdir(BaseCheckpoint.SR3))
-    parser.add_argument("--config",         default="./src/sr_ddpm/sr_config.yaml", type=Path)
-    parser.add_argument("--device",         type=int, default=None)
-    
-    # The folowing args shold not be changed, they are kept for compatability
-    parser.add_argument("--phase",          default="eval")
-    parser.add_argument("--debug",          action="store_true")
-    parser.add_argument("--enable_wandb",   action="store_true")
+    parser.add_argument("--name", type=str, choices=os.listdir(BaseCheckpoint.SR3))
+    parser.add_argument("--config", type=Path, default="./src/sr_ddpm/sr_config.yaml")
+    parser.add_argument("--device", type=int, default=None)
+
+    # The following args should not be changed, they are kept for compatability
+    parser.add_argument("--phase", default="eval")
+    parser.add_argument("--debug", action="store_true")
+    parser.add_argument("--enable_wandb", action="store_true")
     parser.add_argument("--log_wandb_ckpt", action="store_true")
-    parser.add_argument("--log_eval",       action="store_true")
+    parser.add_argument("--log_eval", action="store_true")
     return parser.parse_args()
 
 
@@ -42,7 +42,7 @@ def main():
     args = parse_args()
     opt = configure_params(args)
     device = torch.device(f"cuda:{args.device}")
-    
+
     model_state = load_ckpt(opt.path.experiments_root, device, pattern="*.pth")
 
     test_set = DataSet(
@@ -54,7 +54,7 @@ def main():
     test_loader = DataLoader(test_set, batch_size=64)
     metrics = Metrics(device)
 
-    diffusion = Model.create_model(opt)
+    diffusion = create_model(opt)
     diffusion.netG.load_state_dict(model_state)
     diffusion.netG.cuda()
     diffusion.netG.eval()

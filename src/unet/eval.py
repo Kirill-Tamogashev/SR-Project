@@ -19,8 +19,6 @@ from src.constants import BaseCheckpoint
 from src.miscellaneous.metrics import Metrics
 
 
-
-
 @torch.no_grad()
 def eval_unet(params) -> None:
     device = torch.device(f"cuda:{params.training.device}" if torch.cuda.is_available() else "cpu")
