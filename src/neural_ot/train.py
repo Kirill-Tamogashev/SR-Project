@@ -125,7 +125,7 @@ def main():
     metrics = Metrics(device)
 
     wandb_mode = "disabled" if args.dry_run else "online"
-    with wandb.init(name=EXP_NAME, project='SuperResWithNOT', config=config, mode=wandb_mode):
+    with wandb.init(name=EXP_NAME, project="SuperResWithNOT", config=config, mode=wandb_mode):
         print("Start running the train loop")
         for step in trange(1, args.max_steps, total=args.max_steps, desc="Training"):
             # T optimization
@@ -172,19 +172,17 @@ def main():
             # torch.cuda.empty_cache()
             
             if step % args.metric_freq == 0:
-                for _ in trange(args.test_ites, desc="Runing test iterations ...", 
-                              leave=False, total=args.test_ites):
+                for _ in trange(args.test_ites, desc="Runing test iterations ...", leave=False, total=args.test_ites):
                     
-                    X, Y = val_sampler.sample_paired(args.test_batch)
                     with torch.no_grad():
+                        X, Y = val_sampler.sample_paired(args.test_batch)
                         T_X = T(X)
                     
                     real = tensor2image(Y, (-1.0, 1.0), device)
                     fake = tensor2image(T_X, (-1.0, 1.0), device)
-                    
-                    metrics.update(real=real, fake=fake)
+                    metrics.update(fake, real)
                 
-                metrics_dict = metrics.compute()
+                metrics_dict = metrics.compute(reset=True)
                 wandb.log(metrics_dict)
 
             if step % args.plot_interval == 0:
