@@ -35,9 +35,21 @@ for every available model.
 ### UNet-based regression
 Train:
 ```shell
-unet_train -n UNET_MODEL_NAME -f FINETUNE_MODEL_NAME 
+unet_train -n UNET_MODEL_NAME -f FINETUNE_MODEL_NAME {--ARGS}
+```
+
+Eval:
+```shell
+unet_eval -n UNET_MODEL_NAME -f FINETUNE_MODEL_NAME {--ARGS}
 ```
 ### Pix2Pix regression
-### SR3-Diffusion regression
-### Neural Optimal Transport regression
+For training and evaluation refer to the scripts `pix2pix_train` and  `pix2pix_eval` respectively.
+to get more information of both scripts use `-h` flag.
 
+### SR3-Diffusion regression
+For training and evaluation refer to the scripts `ddpm_sr3_train` and  `ddpm_sr3_eval` respectively.
+to get more information of both scripts use `-h` flag.
+
+### Neural Optimal Transport regression
+For training and evaluation refer to the scripts `not_train` and  `not_eval` respectively.
+to get more information of both scripts use `-h` flag.
